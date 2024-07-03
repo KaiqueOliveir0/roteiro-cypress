@@ -56,4 +56,57 @@ describe('template spec', () => {
     cy.get('.todo-list li')
       .should('have.length', 2);
   });
+
+  it('Edita uma tarefa existente', () => {
+    cy.visit('http://127.0.0.1:7001');
+  
+    cy.get('.new-todo')
+      .type('TP2 de ES{enter}');
+  
+    cy.get('.todo-list li')
+      .dblclick();
+  
+    cy.get('.todo-list li .edit')
+      .clear()
+      .type('TP3 de ES{enter}');
+  
+    cy.get('.todo-list li')
+      .first()
+      .should('have.text', 'TP3 de ES');
+  });
+
+  it('Limpa todas as tarefas completadas', () => {
+    cy.visit('http://127.0.0.1:7001');
+  
+    cy.get('.new-todo')
+      .type('TP2 de ES{enter}')
+      .type('Prova de ES{enter}');
+  
+    cy.get('.todo-list li .toggle')
+      .first()
+      .click();
+  
+    cy.get('.clear-completed')
+      .click();
+  
+    cy.get('.todo-list li')
+      .should('have.length', 1)
+      .first()
+      .should('have.text', 'Prova de ES');
+  });  
+
+  it('Marca todas as tarefas como completas', () => {
+    cy.visit('http://127.0.0.1:7001');
+
+    cy.get('.new-todo')
+      .type('Tarefa 1{enter}')
+      .type('Tarefa 2{enter}')
+      .type('Tarefa 3{enter}');
+
+    cy.get('.toggle')
+      .check({ force: true });
+
+    cy.get('.todo-list li.completed')
+      .should('have.length', 3);
+  });
 });
